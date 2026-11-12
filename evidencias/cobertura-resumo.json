@@ -1,0 +1,16 @@
+{
+  "pacote": "br.com.estoquebairro.service",
+  "linhas": {
+    "type": "LINE",
+    "missed": "3",
+    "covered": "134"
+  },
+  "ramos": {
+    "type": "BRANCH",
+    "missed": "2",
+    "covered": "98"
+  },
+  "percentual_linhas": 97.8102189781022,
+  "percentual_ramos": 98,
+  "exclusoes": []
+}

@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="br.com.estoquebairro.SystemTest" time="17.645" tests="38" errors="0" skipped="0" failures="0" flakes="0">
+  <testcase name="movement_validation" classname="br.com.estoquebairro.SystemTest" time="10.837">
+    </testcase>
+  <testcase name="period_validation" classname="br.com.estoquebairro.SystemTest" time="0.008" />
+  <testcase name="T16_concurrent_stock" classname="br.com.estoquebairro.SystemTest" time="0.029" />
+  <testcase name="forged_confirmation_is_rejected" classname="br.com.estoquebairro.SystemTest" time="0.446" />
+  <testcase name="T20_sql_html_escape" classname="br.com.estoquebairro.SystemTest" time="0.099" />
+  <testcase name="T12_last_day_timezone" classname="br.com.estoquebairro.SystemTest" time="0.02" />
+  <testcase name="T19_price_snapshot" classname="br.com.estoquebairro.SystemTest" time="0.024" />
+  <testcase name="T03_product_and_category" classname="br.com.estoquebairro.SystemTest" time="0.017" />
+  <testcase name="all_pages_render" classname="br.com.estoquebairro.SystemTest" time="0.19" />
+  <testcase name="T05_decimal_input_and_negative_money" classname="br.com.estoquebairro.SystemTest" time="0.082" />
+  <testcase name="T17_concurrent_replay" classname="br.com.estoquebairro.SystemTest" time="0.018" />
+  <testcase name="users_create_edit_validation" classname="br.com.estoquebairro.SystemTest" time="1.074" />
+  <testcase name="T09_insufficient_then_exact" classname="br.com.estoquebairro.SystemTest" time="0.018" />
+  <testcase name="T06_entry" classname="br.com.estoquebairro.SystemTest" time="0.012" />
+  <testcase name="T17_idempotency" classname="br.com.estoquebairro.SystemTest" time="0.017" />
+  <testcase name="T13_deactivation" classname="br.com.estoquebairro.SystemTest" time="0.016" />
+  <testcase name="last_admin_concurrency" classname="br.com.estoquebairro.SystemTest" time="0.01" />
+  <testcase name="product_validation" classname="br.com.estoquebairro.SystemTest" time="0.008" />
+  <testcase name="full_review_confirmation_and_replay" classname="br.com.estoquebairro.SystemTest" time="0.057" />
+  <testcase name="T14_admin_routes_protected" classname="br.com.estoquebairro.SystemTest" time="0.021" />
+  <testcase name="category_edit" classname="br.com.estoquebairro.SystemTest" time="0.009" />
+  <testcase name="changed_role_invalidates_session" classname="br.com.estoquebairro.SystemTest" time="0.009" />
+  <testcase name="money_and_text_boundaries" classname="br.com.estoquebairro.SystemTest" time="0.006" />
+  <testcase name="T18_transaction_rollback" classname="br.com.estoquebairro.SystemTest" time="0.012" />
+  <testcase name="T11_filters_and_pagination" classname="br.com.estoquebairro.SystemTest" time="0.024" />
+  <testcase name="T15_last_admin" classname="br.com.estoquebairro.SystemTest" time="0.009" />
+  <testcase name="T02_logout_and_anonymous" classname="br.com.estoquebairro.SystemTest" time="0.284" />
+  <testcase name="immutable_database_history" classname="br.com.estoquebairro.SystemTest" time="0.01" />
+  <testcase name="T25_csrf_required" classname="br.com.estoquebairro.SystemTest" time="0.009" />
+  <testcase name="T01_login_valid_invalid_inactive" classname="br.com.estoquebairro.SystemTest" time="0.017" />
+  <testcase name="T05_invalid_quantity(int)[1]" classname="br.com.estoquebairro.SystemTest" time="0.014" />
+  <testcase name="T05_invalid_quantity(int)[2]" classname="br.com.estoquebairro.SystemTest" time="0.008" />
+  <testcase name="deactivated_session_is_invalidated" classname="br.com.estoquebairro.SystemTest" time="0.008" />
+  <testcase name="T04_duplicate_sku_and_category" classname="br.com.estoquebairro.SystemTest" time="0.007" />
+  <testcase name="T10_indicators" classname="br.com.estoquebairro.SystemTest" time="0.012" />
+  <testcase name="T07_sale" classname="br.com.estoquebairro.SystemTest" time="0.009" />
+  <testcase name="T08_loss" classname="br.com.estoquebairro.SystemTest" time="0.011" />
+  <testcase name="database_constraints" classname="br.com.estoquebairro.SystemTest" time="0.006" />
+</testsuite>

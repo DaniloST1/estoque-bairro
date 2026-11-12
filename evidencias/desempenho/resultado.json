@@ -1,0 +1,81 @@
+{
+  "ambiente": {
+    "data": "2026-11-10T13:49:58-0300",
+    "sistema": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "nucleos": 9,
+    "aquecimento_seg": 30,
+    "rodada_seg": 120,
+    "rodadas": 3,
+    "usuarios": 5,
+    "mix_planejado": "70% consultas / 30% movimentações",
+    "produtos_iniciais": 1000,
+    "movimentos_iniciais": 10000,
+    "rede": "loopback 127.0.0.1",
+    "medicao": "Consulta = HTTP GET completo; movimentação = GET formulário + POST revisão + POST confirmação com redirecionamento. Pausa 50 ms entre operações.",
+    "memoria": "MemTotal:       10206472 kB",
+    "postgresql": "PostgreSQL 14.19 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit",
+    "jdk": "Eclipse Temurin 21.0.13+9",
+    "aplicacao": "Spring Boot 3.5.16; Estoque Bairro 1.0.0",
+    "observacao": "Ambiente compartilhado. Outras verificações técnicas ocorreram durante a carga. Dados de hardware correspondem aos recursos visíveis, não a garantia de recursos dedicados."
+  },
+  "rodadas": {
+    "1": {
+      "consulta": {
+        "amostras": 7204,
+        "mediana_ms": 5.217,
+        "p95_ms": 19.426,
+        "max_ms": 50.181,
+        "erros": 0,
+        "erro_percentual": 0.0
+      },
+      "movimentacao": {
+        "amostras": 3077,
+        "mediana_ms": 9.537,
+        "p95_ms": 15.212,
+        "max_ms": 34.762,
+        "erros": 0,
+        "erro_percentual": 0.0
+      },
+      "divergencias_saldo": 0
+    },
+    "2": {
+      "consulta": {
+        "amostras": 7153,
+        "mediana_ms": 5.467,
+        "p95_ms": 20.403,
+        "max_ms": 51.983,
+        "erros": 0,
+        "erro_percentual": 0.0
+      },
+      "movimentacao": {
+        "amostras": 3055,
+        "mediana_ms": 9.893,
+        "p95_ms": 16.73,
+        "max_ms": 31.051,
+        "erros": 0,
+        "erro_percentual": 0.0
+      },
+      "divergencias_saldo": 0
+    },
+    "3": {
+      "consulta": {
+        "amostras": 7100,
+        "mediana_ms": 5.567,
+        "p95_ms": 20.987,
+        "max_ms": 61.148,
+        "erros": 0,
+        "erro_percentual": 0.0
+      },
+      "movimentacao": {
+        "amostras": 3037,
+        "mediana_ms": 9.573,
+        "p95_ms": 18.491,
+        "max_ms": 46.676,
+        "erros": 0,
+        "erro_percentual": 0.0
+      },
+      "divergencias_saldo": 0
+    }
+  }
+}

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MovementForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Estoque Bairro</a> &gt; <a href="index.source.html" class="el_package">br.com.estoquebairro.web</a> &gt; <span class="el_source">MovementForm.java</span></div><h1>MovementForm.java</h1><pre class="source lang-java linenums">package br.com.estoquebairro.web;
+
+import jakarta.validation.constraints.*;
+import java.math.BigDecimal;
+import java.util.UUID;
+
+<span class="fc" id="L7">public class MovementForm {</span>
+<span class="fc" id="L8">  @NotNull private UUID chave = UUID.randomUUID();</span>
+
+  public UUID getChave() {
+<span class="fc" id="L11">    return chave;</span>
+  }
+
+  public void setChave(UUID value) {
+<span class="fc" id="L15">    chave = value;</span>
+<span class="fc" id="L16">  }</span>
+
+<span class="fc" id="L18">  @NotNull private Long produtoId = null;</span>
+
+  public Long getProdutoId() {
+<span class="fc" id="L21">    return produtoId;</span>
+  }
+
+  public void setProdutoId(Long value) {
+<span class="fc" id="L25">    produtoId = value;</span>
+<span class="fc" id="L26">  }</span>
+
+<span class="fc" id="L28">  @NotNull</span>
+  @Min(1)
+<span class="fc" id="L30">  private Integer quantidade = 1;</span>
+
+  public Integer getQuantidade() {
+<span class="fc" id="L33">    return quantidade;</span>
+  }
+
+  public void setQuantidade(Integer value) {
+<span class="fc" id="L37">    quantidade = value;</span>
+<span class="fc" id="L38">  }</span>
+
+<span class="fc" id="L40">  @NotBlank private String motivo = &quot;COMPRA&quot;;</span>
+
+  public String getMotivo() {
+<span class="fc" id="L43">    return motivo;</span>
+  }
+
+  public void setMotivo(String value) {
+<span class="fc" id="L47">    motivo = value;</span>
+<span class="fc" id="L48">  }</span>
+
+<span class="fc" id="L50">  private BigDecimal custo = null;</span>
+
+  public BigDecimal getCusto() {
+<span class="fc" id="L53">    return custo;</span>
+  }
+
+  public void setCusto(BigDecimal value) {
+<span class="fc" id="L57">    custo = value;</span>
+<span class="fc" id="L58">  }</span>
+
+<span class="fc" id="L60">  private BigDecimal preco = null;</span>
+
+  public BigDecimal getPreco() {
+<span class="fc" id="L63">    return preco;</span>
+  }
+
+  public void setPreco(BigDecimal value) {
+<span class="fc" id="L67">    preco = value;</span>
+<span class="fc" id="L68">  }</span>
+
+<span class="fc" id="L70">  @Size(max = 300)</span>
+  private String justificativa = &quot;&quot;;
+
+  public String getJustificativa() {
+<span class="fc" id="L74">    return justificativa;</span>
+  }
+
+  public void setJustificativa(String value) {
+<span class="nc" id="L78">    justificativa = value;</span>
+<span class="nc" id="L79">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

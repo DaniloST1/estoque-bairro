@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Estoque Bairro</a> &gt; <a href="index.source.html" class="el_package">br.com.estoquebairro.repository</a> &gt; <span class="el_source">InventoryRepository.java</span></div><h1>InventoryRepository.java</h1><pre class="source lang-java linenums">package br.com.estoquebairro.repository;
+
+import br.com.estoquebairro.model.*;
+import java.math.BigDecimal;
+import java.time.*;
+import java.util.*;
+import org.springframework.jdbc.core.*;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class InventoryRepository {
+  private final JdbcTemplate db;
+
+<span class="fc" id="L14">  public InventoryRepository(JdbcTemplate db) {</span>
+<span class="fc" id="L15">    this.db = db;</span>
+<span class="fc" id="L16">  }</span>
+
+  private static final String PRODUCTS =
+      &quot;SELECT p.*,c.nome categoria FROM produto p JOIN categoria c ON c.id=p.categoria_id &quot;;
+<span class="fc" id="L20">  private static final RowMapper&lt;Product&gt; PRODUCT =</span>
+      (r, n) -&gt;
+<span class="fc" id="L22">          new Product(</span>
+<span class="fc" id="L23">              r.getLong(&quot;id&quot;),</span>
+<span class="fc" id="L24">              r.getString(&quot;sku&quot;),</span>
+<span class="fc" id="L25">              r.getString(&quot;nome&quot;),</span>
+<span class="fc" id="L26">              r.getLong(&quot;categoria_id&quot;),</span>
+<span class="fc" id="L27">              r.getString(&quot;categoria&quot;),</span>
+<span class="fc" id="L28">              r.getBigDecimal(&quot;custo_referencia&quot;),</span>
+<span class="fc" id="L29">              r.getBigDecimal(&quot;preco_venda&quot;),</span>
+<span class="fc" id="L30">              r.getInt(&quot;estoque_minimo&quot;),</span>
+<span class="fc" id="L31">              r.getInt(&quot;saldo&quot;),</span>
+<span class="fc" id="L32">              r.getBoolean(&quot;ativo&quot;));</span>
+  private static final String MOVEMENTS =
+      &quot;SELECT m.*,p.nome produto,p.sku,u.nome usuario FROM movimentacao m JOIN produto p ON&quot;
+          + &quot; p.id=m.produto_id JOIN usuario u ON u.id=m.usuario_id &quot;;
+<span class="fc" id="L36">  private static final RowMapper&lt;Movement&gt; MOVEMENT =</span>
+      (r, n) -&gt;
+<span class="fc" id="L38">          new Movement(</span>
+<span class="fc" id="L39">              r.getLong(&quot;id&quot;),</span>
+<span class="fc" id="L40">              r.getLong(&quot;produto_id&quot;),</span>
+<span class="fc" id="L41">              r.getString(&quot;produto&quot;),</span>
+<span class="fc" id="L42">              r.getString(&quot;sku&quot;),</span>
+<span class="fc" id="L43">              r.getString(&quot;usuario&quot;),</span>
+<span class="fc" id="L44">              r.getString(&quot;tipo&quot;),</span>
+<span class="fc" id="L45">              r.getString(&quot;motivo&quot;),</span>
+<span class="fc" id="L46">              r.getInt(&quot;quantidade&quot;),</span>
+<span class="fc" id="L47">              r.getBigDecimal(&quot;custo_unitario&quot;),</span>
+<span class="fc" id="L48">              r.getBigDecimal(&quot;preco_venda_unitario&quot;),</span>
+<span class="fc" id="L49">              r.getObject(&quot;data_hora&quot;, OffsetDateTime.class),</span>
+<span class="fc" id="L50">              r.getString(&quot;justificativa&quot;),</span>
+<span class="fc" id="L51">              r.getString(&quot;assinatura&quot;),</span>
+<span class="fc" id="L52">              r.getInt(&quot;saldo_apos&quot;));</span>
+
+  public Optional&lt;Product&gt; product(long id, boolean lock) {
+<span class="fc" id="L55">    return db</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        .query(PRODUCTS + &quot;WHERE p.id=?&quot; + (lock ? &quot; FOR UPDATE OF p&quot; : &quot;&quot;), PRODUCT, id)</span>
+<span class="fc" id="L57">        .stream()</span>
+<span class="fc" id="L58">        .findFirst();</span>
+  }
+
+  public List&lt;Category&gt; categories() {
+<span class="fc" id="L62">    return db.query(</span>
+        &quot;SELECT id,nome FROM categoria ORDER BY nome&quot;,
+<span class="fc" id="L64">        (r, n) -&gt; new Category(r.getLong(1), r.getString(2)));</span>
+  }
+
+  public boolean categoryExists(long id) {
+<span class="fc" id="L68">    return Boolean.TRUE.equals(</span>
+<span class="fc" id="L69">        db.queryForObject(&quot;SELECT EXISTS(SELECT 1 FROM categoria WHERE id=?)&quot;, Boolean.class, id));</span>
+  }
+
+  public long addCategory(String name, String normalized) {
+<span class="fc" id="L73">    return db.queryForObject(</span>
+        &quot;INSERT INTO categoria(nome,nome_normalizado) VALUES (?,?) RETURNING id&quot;,
+        Long.class,
+        name,
+        normalized);
+  }
+
+  public int editCategory(long id, String name, String normalized) {
+<span class="fc" id="L81">    return db.update(</span>
+<span class="fc" id="L82">        &quot;UPDATE categoria SET nome=?,nome_normalizado=? WHERE id=?&quot;, name, normalized, id);</span>
+  }
+
+  public long addProduct(
+      String sku, String name, long category, BigDecimal cost, BigDecimal price, int minimum) {
+<span class="fc" id="L87">    return db.queryForObject(</span>
+        &quot;INSERT INTO produto(sku,nome,categoria_id,custo_referencia,preco_venda,estoque_minimo)&quot;
+            + &quot; VALUES (?,?,?,?,?,?) RETURNING id&quot;,
+        Long.class,
+        sku,
+        name,
+<span class="fc" id="L93">        category,</span>
+        cost,
+        price,
+<span class="fc" id="L96">        minimum);</span>
+  }
+
+  public void editProduct(
+      long id,
+      String sku,
+      String name,
+      long category,
+      BigDecimal price,
+      int minimum,
+      boolean active) {
+<span class="fc" id="L107">    db.update(</span>
+        &quot;UPDATE produto SET sku=?,nome=?,categoria_id=?,preco_venda=?,estoque_minimo=?,ativo=?&quot;
+            + &quot; WHERE id=?&quot;,
+        sku,
+        name,
+<span class="fc" id="L112">        category,</span>
+        price,
+<span class="fc" id="L114">        minimum,</span>
+<span class="fc" id="L115">        active,</span>
+<span class="fc" id="L116">        id);</span>
+<span class="fc" id="L117">  }</span>
+
+  public void stock(long id, int balance, BigDecimal cost) {
+<span class="fc" id="L120">    db.update(&quot;UPDATE produto SET saldo=?,custo_referencia=? WHERE id=?&quot;, balance, cost, id);</span>
+<span class="fc" id="L121">  }</span>
+
+  public void lockRequest(UUID key) {
+<span class="fc" id="L124">    db.queryForObject(</span>
+<span class="fc" id="L125">        &quot;SELECT pg_advisory_xact_lock(hashtextextended(?,0))&quot;, Object.class, key.toString());</span>
+<span class="fc" id="L126">  }</span>
+
+  public Optional&lt;Movement&gt; byKey(UUID key) {
+<span class="fc" id="L129">    return db.query(MOVEMENTS + &quot;WHERE m.chave_requisicao=?&quot;, MOVEMENT, key).stream().findFirst();</span>
+  }
+
+  public Optional&lt;Movement&gt; movement(long id) {
+<span class="fc" id="L133">    return db.query(MOVEMENTS + &quot;WHERE m.id=?&quot;, MOVEMENT, id).stream().findFirst();</span>
+  }
+
+  public long insertMovement(
+      MovementCommand c, long user, BigDecimal cost, BigDecimal price, String hash, int balance) {
+<span class="fc" id="L138">    return db.queryForObject(</span>
+        &quot;INSERT INTO&quot;
+            + &quot; movimentacao(produto_id,usuario_id,tipo,motivo,quantidade,custo_unitario,preco_venda_unitario,justificativa,chave_requisicao,assinatura,saldo_apos)&quot;
+            + &quot; VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING id&quot;,
+        Long.class,
+<span class="fc" id="L143">        c.produtoId(),</span>
+<span class="fc" id="L144">        user,</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        c.motivo().equals(&quot;COMPRA&quot;) ? &quot;ENTRADA&quot; : &quot;SAIDA&quot;,</span>
+<span class="fc" id="L146">        c.motivo(),</span>
+<span class="fc" id="L147">        c.quantidade(),</span>
+        cost,
+        price,
+<span class="fc" id="L150">        c.justificativa(),</span>
+<span class="fc" id="L151">        c.chave(),</span>
+        hash,
+<span class="fc" id="L153">        balance);</span>
+  }
+
+<span class="fc" id="L156">  public record ProductPage(List&lt;Product&gt; items, long total, int page) {</span>
+    public long pages() {
+<span class="fc" id="L158">      return Math.max(1, (total + 19) / 20);</span>
+    }
+  }
+
+  public ProductPage search(String query, Long category, String status, boolean low, int page) {
+<span class="fc" id="L163">    StringBuilder where = new StringBuilder(&quot; WHERE 1=1 &quot;);</span>
+<span class="fc" id="L164">    List&lt;Object&gt; args = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L165" title="All 4 branches covered.">    if (query != null &amp;&amp; !query.isBlank()) {</span>
+<span class="fc" id="L166">      where.append(&quot; AND (p.nome ILIKE ? ESCAPE '!' OR p.sku ILIKE ? ESCAPE '!')&quot;);</span>
+<span class="fc" id="L167">      String q = &quot;%&quot; + query.strip().replace(&quot;!&quot;, &quot;!!&quot;).replace(&quot;%&quot;, &quot;!%&quot;).replace(&quot;_&quot;, &quot;!_&quot;) + &quot;%&quot;;</span>
+<span class="fc" id="L168">      args.add(q);</span>
+<span class="fc" id="L169">      args.add(q);</span>
+    }
+<span class="fc bfc" id="L171" title="All 2 branches covered.">    if (category != null) {</span>
+<span class="fc" id="L172">      where.append(&quot; AND p.categoria_id=?&quot;);</span>
+<span class="fc" id="L173">      args.add(category);</span>
+    }
+<span class="fc bfc" id="L175" title="All 4 branches covered.">    if (&quot;ativo&quot;.equals(status) || &quot;inativo&quot;.equals(status)) {</span>
+<span class="fc" id="L176">      where.append(&quot; AND p.ativo=?&quot;);</span>
+<span class="fc" id="L177">      args.add(&quot;ativo&quot;.equals(status));</span>
+    }
+<span class="fc bfc" id="L179" title="All 2 branches covered.">    if (low) where.append(&quot; AND p.ativo AND p.saldo&lt;=p.estoque_minimo&quot;);</span>
+<span class="fc" id="L180">    long total =</span>
+<span class="fc" id="L181">        db.queryForObject(&quot;SELECT count(*) FROM produto p&quot; + where, Long.class, args.toArray());</span>
+<span class="fc" id="L182">    int safe = (int) Math.max(0, Math.min(page, Math.max(0, (total - 1) / 20)));</span>
+<span class="fc" id="L183">    args.add(20);</span>
+<span class="fc" id="L184">    args.add(safe * 20);</span>
+<span class="fc" id="L185">    return new ProductPage(</span>
+<span class="fc" id="L186">        db.query(</span>
+<span class="fc" id="L187">            PRODUCTS + where + &quot; ORDER BY p.nome,p.id LIMIT ? OFFSET ?&quot;, PRODUCT, args.toArray()),</span>
+        total,
+        safe);
+  }
+
+<span class="fc" id="L192">  public record HistoryPage(List&lt;Movement&gt; items, long total, int page) {</span>
+    public long pages() {
+<span class="fc" id="L194">      return Math.max(1, (total + 19) / 20);</span>
+    }
+  }
+
+  public HistoryPage history(
+      OffsetDateTime from, OffsetDateTime to, Long product, String type, int page) {
+<span class="fc" id="L200">    String where = &quot; WHERE m.data_hora&gt;=? AND m.data_hora&lt;?&quot;;</span>
+<span class="fc" id="L201">    List&lt;Object&gt; a = new ArrayList&lt;&gt;(List.of(from, to));</span>
+<span class="fc bfc" id="L202" title="All 2 branches covered.">    if (product != null) {</span>
+<span class="fc" id="L203">      where += &quot; AND m.produto_id=?&quot;;</span>
+<span class="fc" id="L204">      a.add(product);</span>
+    }
+<span class="pc bpc" id="L206" title="1 of 4 branches missed.">    if (&quot;ENTRADA&quot;.equals(type) || &quot;SAIDA&quot;.equals(type)) {</span>
+<span class="fc" id="L207">      where += &quot; AND m.tipo=?&quot;;</span>
+<span class="fc" id="L208">      a.add(type);</span>
+    }
+<span class="fc" id="L210">    long count =</span>
+<span class="fc" id="L211">        db.queryForObject(&quot;SELECT count(*) FROM movimentacao m&quot; + where, Long.class, a.toArray());</span>
+<span class="fc" id="L212">    int safe = (int) Math.max(0, Math.min(page, Math.max(0, (count - 1) / 20)));</span>
+<span class="fc" id="L213">    a.add(20);</span>
+<span class="fc" id="L214">    a.add(safe * 20);</span>
+<span class="fc" id="L215">    return new HistoryPage(</span>
+<span class="fc" id="L216">        db.query(</span>
+            MOVEMENTS + where + &quot; ORDER BY m.data_hora DESC,m.id DESC LIMIT ? OFFSET ?&quot;,
+            MOVEMENT,
+<span class="fc" id="L219">            a.toArray()),</span>
+        count,
+        safe);
+  }
+
+  public Map&lt;String, Object&gt; summary(OffsetDateTime from, OffsetDateTime to) {
+<span class="fc" id="L225">    Map&lt;String, Object&gt; result =</span>
+        new LinkedHashMap&lt;&gt;(
+<span class="fc" id="L227">            db.queryForMap(</span>
+                &quot;SELECT count(*) FILTER(WHERE ativo) ativos,count(*) FILTER(WHERE ativo AND&quot;
+                    + &quot; saldo&lt;=estoque_minimo) baixos,coalesce(sum(saldo*custo_referencia),0) valor&quot;
+                    + &quot; FROM produto&quot;));
+<span class="fc" id="L231">    result.putAll(</span>
+<span class="fc" id="L232">        db.queryForMap(</span>
+            &quot;SELECT coalesce(sum(quantidade*custo_unitario) FILTER(WHERE motivo='COMPRA'),0)&quot;
+                + &quot; entradas,coalesce(sum(quantidade*preco_venda_unitario) FILTER(WHERE&quot;
+                + &quot; motivo='VENDA'),0) vendas,coalesce(sum(quantidade*custo_unitario) FILTER(WHERE&quot;
+                + &quot; motivo='PERDA'),0) perdas FROM movimentacao WHERE data_hora&gt;=? AND data_hora&lt;?&quot;,
+            from,
+            to));
+<span class="fc" id="L239">    return result;</span>
+  }
+
+  public List&lt;Map&lt;String, Object&gt;&gt; quantities(OffsetDateTime from, OffsetDateTime to) {
+<span class="fc" id="L243">    return db.queryForList(</span>
+        &quot;SELECT p.id,p.sku,p.nome,coalesce(sum(m.quantidade) FILTER(WHERE m.motivo='COMPRA'),0)&quot;
+            + &quot; entradas,coalesce(sum(m.quantidade) FILTER(WHERE m.motivo='VENDA'),0)&quot;
+            + &quot; vendas,coalesce(sum(m.quantidade) FILTER(WHERE m.motivo='PERDA'),0) perdas FROM&quot;
+            + &quot; movimentacao m JOIN produto p ON p.id=m.produto_id WHERE m.data_hora&gt;=? AND&quot;
+            + &quot; m.data_hora&lt;? GROUP BY p.id ORDER BY p.nome,p.id&quot;,
+        from,
+        to);
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

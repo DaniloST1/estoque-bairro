@@ -1,0 +1,84 @@
+{
+  "teste": "T24",
+  "data": "2026-11-10T13:55:11-0300",
+  "executor": "automação técnica",
+  "ferramenta": "pg_dump (PostgreSQL) 14.24 (Debian 14.24-2~20261109.0500.g38ccfd8c955.pgdg12+1)",
+  "origem": "PostgreSQL temporário do QualityServer",
+  "destino": "estoque_restore_1794329711",
+  "bytes_dump": 356945,
+  "antes": {
+    "categoria": {
+      "registros": 3,
+      "sha256": "3cebd08a911ae1a62311752b9961b8f0fc46df711ad593b803f50ee7e939539c"
+    },
+    "produto": {
+      "registros": 1000,
+      "sha256": "6f163b5364e73a708be5e0b9a9104b59726bc1169a8a454da397299cbdcdd2ff"
+    },
+    "usuario": {
+      "registros": 2,
+      "sha256": "3edc0035f9ab15829cbbaa6f0cc06daa044938d761c10af4ecb6bdcb936b1319"
+    },
+    "movimentacao": {
+      "registros": 10000,
+      "sha256": "8b61304d27e63962136341e0a2fff64bd699379cd986afd4c8e094ecc8b3759e"
+    },
+    "divergencias_saldo": 0,
+    "sequencias": {
+      "categoria": [
+        3,
+        true
+      ],
+      "produto": [
+        1000,
+        true
+      ],
+      "usuario": [
+        2,
+        true
+      ],
+      "movimentacao": [
+        10000,
+        true
+      ]
+    }
+  },
+  "depois": {
+    "categoria": {
+      "registros": 3,
+      "sha256": "3cebd08a911ae1a62311752b9961b8f0fc46df711ad593b803f50ee7e939539c"
+    },
+    "produto": {
+      "registros": 1000,
+      "sha256": "6f163b5364e73a708be5e0b9a9104b59726bc1169a8a454da397299cbdcdd2ff"
+    },
+    "usuario": {
+      "registros": 2,
+      "sha256": "3edc0035f9ab15829cbbaa6f0cc06daa044938d761c10af4ecb6bdcb936b1319"
+    },
+    "movimentacao": {
+      "registros": 10000,
+      "sha256": "8b61304d27e63962136341e0a2fff64bd699379cd986afd4c8e094ecc8b3759e"
+    },
+    "divergencias_saldo": 0,
+    "sequencias": {
+      "categoria": [
+        3,
+        true
+      ],
+      "produto": [
+        1000,
+        true
+      ],
+      "usuario": [
+        2,
+        true
+      ],
+      "movimentacao": [
+        10000,
+        true
+      ]
+    }
+  },
+  "resultado": "APROVADO"
+}

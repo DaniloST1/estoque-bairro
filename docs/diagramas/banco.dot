@@ -1,0 +1,12 @@
+digraph Banco {
+ graph [rankdir=TB,bgcolor="white",pad=0.35,nodesep=0.7,ranksep=0.6];
+ node [shape=record,fontname="DejaVu Sans",fontsize=11,style="filled",fillcolor="#F3F6F2",color="#365746",margin="0.16,0.12"];
+ edge [fontname="DejaVu Sans",fontsize=10,color="#365746"];
+ categoria [label="CATEGORIA|id PK\lnome\lnome_normalizado UNIQUE\l"];
+ produto [label="PRODUTO|id PK\lsku UNIQUE\lcategoria_id FK\lcusto_referencia e preco_venda\lestoque_minimo e saldo\lativo\l"];
+ usuario [label="USUARIO|id PK\llogin UNIQUE\lsenha_hash\lperfil e ativo\lversao\l"];
+ movimento [label="MOVIMENTACAO|id PK\lproduto_id e usuario_id FK\ltipo, motivo e quantidade\lcusto e preco registrados\ldata_hora e justificativa\lchave_requisicao UNIQUE\lassinatura e saldo_apos\l"];
+ categoria -> produto [label="1 : N"];
+ produto -> movimento [label="1 : N"];
+ usuario -> movimento [label="1 : N"];
+}

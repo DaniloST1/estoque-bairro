@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Estoque Bairro</a> &gt; <a href="index.source.html" class="el_package">br.com.estoquebairro.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package br.com.estoquebairro.config;
+
+import br.com.estoquebairro.repository.UserRepository;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+import java.io.IOException;
+import java.util.Locale;
+import org.springframework.context.annotation.*;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+@Configuration
+<span class="fc" id="L19">public class SecurityConfig {</span>
+  @Bean
+  PasswordEncoder passwordEncoder() {
+<span class="fc" id="L22">    return new BCryptPasswordEncoder(12);</span>
+  }
+
+  @Bean
+  UserDetailsService userDetailsService(UserRepository repo) {
+<span class="fc" id="L27">    return login -&gt;</span>
+<span class="fc" id="L28">        repo.byLogin(login.strip().toLowerCase(Locale.ROOT))</span>
+<span class="fc" id="L29">            .map(SessionUser::new)</span>
+<span class="pc" id="L30">            .orElseThrow(() -&gt; new UsernameNotFoundException(&quot;Credenciais inválidas&quot;));</span>
+  }
+
+  @Bean
+  SecurityFilterChain security(HttpSecurity http, UserRepository repo) throws Exception {
+<span class="fc" id="L35">    http.authorizeHttpRequests(</span>
+            a -&gt;
+<span class="fc" id="L37">                a.requestMatchers(&quot;/login&quot;, &quot;/style.css&quot;, &quot;/app.js&quot;, &quot;/error&quot;)</span>
+<span class="fc" id="L38">                    .permitAll()</span>
+<span class="fc" id="L39">                    .requestMatchers(&quot;/admin/**&quot;)</span>
+<span class="fc" id="L40">                    .hasRole(&quot;ADMIN&quot;)</span>
+<span class="fc" id="L41">                    .anyRequest()</span>
+<span class="fc" id="L42">                    .authenticated())</span>
+<span class="fc" id="L43">        .formLogin(</span>
+            f -&gt;
+<span class="fc" id="L45">                f.loginPage(&quot;/login&quot;)</span>
+<span class="fc" id="L46">                    .defaultSuccessUrl(&quot;/&quot;, true)</span>
+<span class="fc" id="L47">                    .failureUrl(&quot;/login?erro&quot;)</span>
+<span class="fc" id="L48">                    .permitAll())</span>
+<span class="fc" id="L49">        .logout(</span>
+            l -&gt;
+<span class="fc" id="L51">                l.logoutSuccessUrl(&quot;/login?saiu&quot;)</span>
+<span class="fc" id="L52">                    .invalidateHttpSession(true)</span>
+<span class="fc" id="L53">                    .deleteCookies(&quot;JSESSIONID&quot;))</span>
+<span class="fc" id="L54">        .exceptionHandling(e -&gt; e.accessDeniedPage(&quot;/acesso-negado&quot;))</span>
+<span class="fc" id="L55">        .headers(</span>
+            h -&gt;
+<span class="fc" id="L57">                h.contentSecurityPolicy(</span>
+                    c -&gt;
+<span class="fc" id="L59">                        c.policyDirectives(</span>
+                            &quot;default-src 'self'; script-src 'self'; style-src 'self'; img-src&quot;
+                                + &quot; 'self' data:; base-uri 'self'; form-action 'self';&quot;
+                                + &quot; frame-ancestors 'none'&quot;)))
+<span class="fc" id="L63">        .addFilterBefore(</span>
+<span class="fc" id="L64">            new OncePerRequestFilter() {</span>
+              @Override
+              protected void doFilterInternal(
+                  HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+                  throws IOException, ServletException {
+<span class="fc" id="L69">                var auth = SecurityContextHolder.getContext().getAuthentication();</span>
+<span class="pc bpc" id="L70" title="1 of 4 branches missed.">                if (auth != null &amp;&amp; auth.getPrincipal() instanceof SessionUser p) {</span>
+                  try {
+<span class="fc" id="L72">                    var current = repo.byId(p.id);</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">                    if (current.isEmpty()</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">                        || !current.get().ativo()</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">                        || current.get().versao() != p.version) {</span>
+<span class="fc" id="L76">                      SecurityContextHolder.clearContext();</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">                      if (request.getSession(false) != null) request.getSession(false).invalidate();</span>
+<span class="fc" id="L78">                      response.sendRedirect(request.getContextPath() + &quot;/login?expirou&quot;);</span>
+<span class="fc" id="L79">                      return;</span>
+                    }
+<span class="nc" id="L81">                  } catch (org.springframework.dao.DataAccessException e) {</span>
+<span class="nc" id="L82">                    response.setStatus(503);</span>
+<span class="nc" id="L83">                    response.setContentType(&quot;text/plain;charset=UTF-8&quot;);</span>
+<span class="nc" id="L84">                    response</span>
+<span class="nc" id="L85">                        .getWriter()</span>
+<span class="nc" id="L86">                        .write(</span>
+                            &quot;Banco indisponível. Nenhuma operação foi confirmada nesta requisição.&quot;
+                                + &quot; Tente novamente.&quot;);
+<span class="nc" id="L89">                    return;</span>
+<span class="fc" id="L90">                  }</span>
+                }
+<span class="fc" id="L92">                chain.doFilter(request, response);</span>
+<span class="fc" id="L93">              }</span>
+            },
+            AuthorizationFilter.class);
+<span class="fc" id="L96">    return http.build();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

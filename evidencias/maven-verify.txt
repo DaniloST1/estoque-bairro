@@ -1,0 +1,133 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------< br.com.estoquebairro:estoque-bairro >-----------------
+[INFO] Building Estoque Bairro 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ estoque-bairro ---
+[INFO] Deleting /workspace/scratch/193a234eba8c/estoque-bairro/target
+[INFO] 
+[INFO] --- jacoco:0.8.14:prepare-agent (default) @ estoque-bairro ---
+[INFO] argLine set to -javaagent:/workspace/scratch/193a234eba8c/.build-tools/m2/org/jacoco/org.jacoco.agent/0.8.14/org.jacoco.agent-0.8.14-runtime.jar=destfile=/workspace/scratch/193a234eba8c/estoque-bairro/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ estoque-bairro ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 18 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ estoque-bairro ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 24 source files with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ estoque-bairro ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ estoque-bairro ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 2 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ estoque-bairro ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running br.com.estoquebairro.SystemTest
+13:56:39.504 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [br.com.estoquebairro.SystemTest]: SystemTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+13:56:39.679 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration br.com.estoquebairro.EstoqueBairroApplication for test class br.com.estoquebairro.SystemTest
+13:56:39.851 [main] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- Detected a Linux x86_64 system
+13:56:39.862 [main] INFO io.zonky.test.db.postgres.embedded.DefaultPostgresBinaryResolver -- Detected distribution: 'Debian'
+13:56:39.864 [main] INFO io.zonky.test.db.postgres.embedded.DefaultPostgresBinaryResolver -- System specific postgres binaries found: 'postgres-linux-x86_64.txz'
+13:56:39.918 [main] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- Postgres binaries at /tmp/embedded-pg/PG-dc78f05ddbacd4ba30f8b7a55b22ff84
+13:56:39.928 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- The files belonging to this database system will be owned by user "agent".
+13:56:39.928 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- This user must also own the server process.
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- The database cluster will be initialized with locale "C.UTF-8".
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- The default text search configuration will be set to "english".
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- Data page checksums are disabled.
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- fixing permissions on existing directory /tmp/epg9383412523663889411 ... ok
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- creating subdirectories ... ok
+13:56:39.929 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- selecting dynamic shared memory implementation ... posix
+13:56:39.935 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- selecting default max_connections ... 100
+13:56:39.942 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- selecting default shared_buffers ... 128MB
+13:56:39.949 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- selecting default time zone ... America/Sao_Paulo
+13:56:39.949 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- creating configuration files ... ok
+13:56:40.018 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- running bootstrap script ... ok
+13:56:40.286 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- performing post-bootstrap initialization ... ok
+13:56:40.288 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- syncing data to disk ... ok
+13:56:40.288 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 
+13:56:40.288 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- Success. You can now start the database server using:
+13:56:40.288 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 
+13:56:40.288 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres --     /tmp/embedded-pg/PG-dc78f05ddbacd4ba30f8b7a55b22ff84/bin/pg_ctl -D /tmp/epg9383412523663889411 -l logfile start
+13:56:40.288 [initdb:pid(165)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 
+13:56:40.288 [main] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 08ca8ea4-3e2c-4938-9e84-b8350f70882e initdb completed in 00:00:00.368
+13:56:40.294 [main] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 08ca8ea4-3e2c-4938-9e84-b8350f70882e postmaster started as Process[pid=180, exitValue="not exited"] on port 36303.  Waiting up to PT10S for server startup to finish.
+13:56:40.307 [postgres:pid(180)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- waiting for server to start....2026-11-10 13:56:40.307 -03 [184] LOG:  starting PostgreSQL 14.19 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit
+13:56:40.308 [postgres:pid(180)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 2026-11-10 13:56:40.307 -03 [184] LOG:  listening on IPv6 address "::1", port 36303
+13:56:40.308 [postgres:pid(180)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 2026-11-10 13:56:40.307 -03 [184] LOG:  listening on IPv4 address "127.0.0.1", port 36303
+13:56:40.308 [postgres:pid(180)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 2026-11-10 13:56:40.308 -03 [185] LOG:  database system was shut down at 2026-11-10 13:56:40 -03
+13:56:40.310 [postgres:pid(180)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 2026-11-10 13:56:40.310 -03 [184] LOG:  database system is ready to accept connections
+13:56:40.398 [postgres:pid(180)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres --  done
+13:56:40.398 [postgres:pid(180)] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- server started
+13:56:40.544 [main] INFO io.zonky.test.db.postgres.embedded.EmbeddedPostgres -- 08ca8ea4-3e2c-4938-9e84-b8350f70882e postmaster startup finished in 00:00:00.252
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.16)
+
+2026-11-10T13:56:40.943-03:00  INFO 129 --- [Estoque Bairro] [           main] br.com.estoquebairro.SystemTest          : Starting SystemTest using Java 21.0.13 with PID 129 (started by agent in /workspace/scratch/193a234eba8c/estoque-bairro)
+2026-11-10T13:56:40.944-03:00  INFO 129 --- [Estoque Bairro] [           main] br.com.estoquebairro.SystemTest          : No active profile set, falling back to 1 default profile: "default"
+2026-11-10T13:56:42.175-03:00  INFO 129 --- [Estoque Bairro] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-10T13:56:42.190-03:00  INFO 129 --- [Estoque Bairro] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@d884e9a
+2026-11-10T13:56:42.192-03:00  INFO 129 --- [Estoque Bairro] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-10T13:56:42.226-03:00  INFO 129 --- [Estoque Bairro] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:36303/postgres?user=postgres (PostgreSQL 14.19)
+2026-11-10T13:56:42.260-03:00  INFO 129 --- [Estoque Bairro] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-11-10T13:56:42.263-03:00  INFO 129 --- [Estoque Bairro] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.016s)
+2026-11-10T13:56:42.273-03:00  INFO 129 --- [Estoque Bairro] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-11-10T13:56:42.316-03:00  INFO 129 --- [Estoque Bairro] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-11-10T13:56:42.331-03:00  INFO 129 --- [Estoque Bairro] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - estrutura"
+2026-11-10T13:56:42.357-03:00  INFO 129 --- [Estoque Bairro] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "public", now at version v1 (execution time 00:00.014s)
+2026-11-10T13:56:42.526-03:00  INFO 129 --- [Estoque Bairro] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService
+2026-11-10T13:56:43.081-03:00  INFO 129 --- [Estoque Bairro] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-10T13:56:43.081-03:00  INFO 129 --- [Estoque Bairro] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-10T13:56:43.083-03:00  INFO 129 --- [Estoque Bairro] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-11-10T13:56:43.105-03:00  INFO 129 --- [Estoque Bairro] [           main] br.com.estoquebairro.SystemTest          : Started SystemTest in 2.524 seconds (process running for 4.454)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+[INFO] Tests run: 38, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 17.65 s -- in br.com.estoquebairro.SystemTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 38, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ estoque-bairro ---
+[INFO] Building jar: /workspace/scratch/193a234eba8c/estoque-bairro/target/estoque-bairro-1.0.0.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.16:repackage (repackage) @ estoque-bairro ---
+[INFO] Replacing main artifact /workspace/scratch/193a234eba8c/estoque-bairro/target/estoque-bairro-1.0.0.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /workspace/scratch/193a234eba8c/estoque-bairro/target/estoque-bairro-1.0.0.jar.original
+[INFO] 
+[INFO] --- jacoco:0.8.14:report (report) @ estoque-bairro ---
+[INFO] Loading execution data file /workspace/scratch/193a234eba8c/estoque-bairro/target/jacoco.exec
+[INFO] Analyzed bundle 'Estoque Bairro' with 27 classes
+[INFO] 
+[INFO] --- jacoco:0.8.14:check (report) @ estoque-bairro ---
+[INFO] Loading execution data file /workspace/scratch/193a234eba8c/estoque-bairro/target/jacoco.exec
+[INFO] Analyzed bundle 'estoque-bairro' with 27 classes
+[INFO] All coverage checks have been met.
+[INFO] 
+[INFO] --- dependency:3.8.1:build-classpath (default-cli) @ estoque-bairro ---
+[INFO] Wrote classpath file '/workspace/scratch/193a234eba8c/estoque-bairro/target/test-classpath.txt'.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  21.869 s
+[INFO] Finished at: 2026-11-10T13:56:58-03:00
+[INFO] ------------------------------------------------------------------------

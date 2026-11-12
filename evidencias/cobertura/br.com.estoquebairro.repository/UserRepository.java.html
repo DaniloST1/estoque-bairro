@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Estoque Bairro</a> &gt; <a href="index.source.html" class="el_package">br.com.estoquebairro.repository</a> &gt; <span class="el_source">UserRepository.java</span></div><h1>UserRepository.java</h1><pre class="source lang-java linenums">package br.com.estoquebairro.repository;
+
+import br.com.estoquebairro.model.Account;
+import java.util.*;
+import org.springframework.jdbc.core.*;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class UserRepository {
+  private final JdbcTemplate db;
+<span class="fc" id="L11">  private final RowMapper&lt;Account&gt; row =</span>
+      (r, n) -&gt;
+<span class="fc" id="L13">          new Account(</span>
+<span class="fc" id="L14">              r.getLong(&quot;id&quot;),</span>
+<span class="fc" id="L15">              r.getString(&quot;nome&quot;),</span>
+<span class="fc" id="L16">              r.getString(&quot;login&quot;),</span>
+<span class="fc" id="L17">              r.getString(&quot;senha_hash&quot;),</span>
+<span class="fc" id="L18">              r.getString(&quot;perfil&quot;),</span>
+<span class="fc" id="L19">              r.getBoolean(&quot;ativo&quot;),</span>
+<span class="fc" id="L20">              r.getLong(&quot;versao&quot;));</span>
+
+<span class="fc" id="L22">  public UserRepository(JdbcTemplate db) {</span>
+<span class="fc" id="L23">    this.db = db;</span>
+<span class="fc" id="L24">  }</span>
+
+  public Optional&lt;Account&gt; byLogin(String login) {
+<span class="fc" id="L27">    return db.query(&quot;SELECT * FROM usuario WHERE login=?&quot;, row, login).stream().findFirst();</span>
+  }
+
+  public Optional&lt;Account&gt; byId(long id) {
+<span class="fc" id="L31">    return db.query(&quot;SELECT * FROM usuario WHERE id=?&quot;, row, id).stream().findFirst();</span>
+  }
+
+  public List&lt;Account&gt; all() {
+<span class="fc" id="L35">    return db.query(&quot;SELECT * FROM usuario ORDER BY nome,id&quot;, row);</span>
+  }
+
+  public long count() {
+<span class="fc" id="L39">    return db.queryForObject(&quot;SELECT count(*) FROM usuario&quot;, Long.class);</span>
+  }
+
+  public long admins() {
+<span class="fc" id="L43">    return db.queryForObject(</span>
+        &quot;SELECT count(*) FROM usuario WHERE ativo AND perfil='ADMIN'&quot;, Long.class);
+  }
+
+  public void lockAdministration() {
+<span class="fc" id="L48">    db.queryForObject(&quot;SELECT pg_advisory_xact_lock(642001)&quot;, Object.class);</span>
+<span class="fc" id="L49">  }</span>
+
+  public long add(String name, String login, String hash, String role, boolean active) {
+<span class="fc" id="L52">    return db.queryForObject(</span>
+        &quot;INSERT INTO usuario(nome,login,senha_hash,perfil,ativo) VALUES (?,?,?,?,?) RETURNING id&quot;,
+        Long.class,
+        name,
+        login,
+        hash,
+        role,
+<span class="fc" id="L59">        active);</span>
+  }
+
+  public void edit(long id, String name, String hash, String role, boolean active) {
+<span class="fc" id="L63">    db.update(</span>
+        &quot;UPDATE usuario SET nome=?,senha_hash=?,perfil=?,ativo=?,versao=versao+1 WHERE id=?&quot;,
+        name,
+        hash,
+        role,
+<span class="fc" id="L68">        active,</span>
+<span class="fc" id="L69">        id);</span>
+<span class="fc" id="L70">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

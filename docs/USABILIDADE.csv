@@ -1,0 +1,10 @@
+participante,tarefa,versao,data,inicio,fim,duracao_segundos,concluiu_sem_ajuda,ajuda_recebida,dificuldade_observada,situacao
+P1,localizar produto,1.0.0,,,,,,,,PENDENTE
+P1,entrada de 5 unidades,1.0.0,,,,,,,,PENDENTE
+P1,saida de 2 unidades,1.0.0,,,,,,,,PENDENTE
+P2,localizar produto,1.0.0,,,,,,,,PENDENTE
+P2,entrada de 5 unidades,1.0.0,,,,,,,,PENDENTE
+P2,saida de 2 unidades,1.0.0,,,,,,,,PENDENTE
+P3,localizar produto,1.0.0,,,,,,,,PENDENTE
+P3,entrada de 5 unidades,1.0.0,,,,,,,,PENDENTE
+P3,saida de 2 unidades,1.0.0,,,,,,,,PENDENTE

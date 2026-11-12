@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16.10-bookworm
+    environment:
+      POSTGRES_DB: estoque_bairro
+      POSTGRES_USER: estoque
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Execute a configuração primeiro}
+    volumes:
+      - estoque_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U estoque -d estoque_bairro"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:${PORT:-8080}:8080"
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/estoque_bairro
+      DB_USER: estoque
+      DB_PASSWORD: ${DB_PASSWORD:?Execute a configuração primeiro}
+      ADMIN_LOGIN: ${ADMIN_LOGIN:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Execute a configuração primeiro}
+      OPERATOR_PASSWORD: ${OPERATOR_PASSWORD:?Execute a configuração primeiro}
+      DEMO_DATA: ${DEMO_DATA:-true}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  estoque_data:

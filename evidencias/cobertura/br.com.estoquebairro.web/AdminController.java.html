@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdminController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Estoque Bairro</a> &gt; <a href="index.source.html" class="el_package">br.com.estoquebairro.web</a> &gt; <span class="el_source">AdminController.java</span></div><h1>AdminController.java</h1><pre class="source lang-java linenums">package br.com.estoquebairro.web;
+
+import br.com.estoquebairro.repository.*;
+import br.com.estoquebairro.service.*;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@Controller
+@RequestMapping(&quot;/admin&quot;)
+public class AdminController {
+  private final InventoryService service;
+  private final InventoryRepository repo;
+  private final UserService users;
+  private final UserRepository accounts;
+
+  public AdminController(
+      InventoryService service,
+      InventoryRepository repo,
+      UserService users,
+<span class="fc" id="L24">      UserRepository accounts) {</span>
+<span class="fc" id="L25">    this.service = service;</span>
+<span class="fc" id="L26">    this.repo = repo;</span>
+<span class="fc" id="L27">    this.users = users;</span>
+<span class="fc" id="L28">    this.accounts = accounts;</span>
+<span class="fc" id="L29">  }</span>
+
+  @GetMapping(&quot;/produtos/novo&quot;)
+  public String newProduct(Model m) {
+<span class="fc" id="L33">    m.addAttribute(&quot;form&quot;, new ProductForm());</span>
+<span class="fc" id="L34">    return productPage(null, m);</span>
+  }
+
+  @GetMapping(&quot;/produtos/{id}&quot;)
+  public String editProduct(@PathVariable long id, Model m) {
+<span class="fc" id="L39">    var p = service.product(id);</span>
+<span class="fc" id="L40">    var f = new ProductForm();</span>
+<span class="fc" id="L41">    f.setSku(p.sku());</span>
+<span class="fc" id="L42">    f.setNome(p.nome());</span>
+<span class="fc" id="L43">    f.setCategoriaId(p.categoriaId());</span>
+<span class="fc" id="L44">    f.setCusto(p.custo());</span>
+<span class="fc" id="L45">    f.setPreco(p.preco());</span>
+<span class="fc" id="L46">    f.setMinimo(p.minimo());</span>
+<span class="fc" id="L47">    f.setAtivo(p.ativo());</span>
+<span class="fc" id="L48">    m.addAttribute(&quot;form&quot;, f);</span>
+<span class="fc" id="L49">    return productPage(id, m);</span>
+  }
+
+  private String productPage(Long id, Model m) {
+<span class="fc" id="L53">    m.addAttribute(&quot;id&quot;, id);</span>
+<span class="fc" id="L54">    m.addAttribute(&quot;categories&quot;, repo.categories());</span>
+<span class="fc" id="L55">    return &quot;product-form&quot;;</span>
+  }
+
+  @PostMapping({&quot;/produtos/novo&quot;, &quot;/produtos/{id}&quot;})
+  public String saveProduct(
+      @PathVariable(required = false) Long id,
+      @Valid @ModelAttribute(&quot;form&quot;) ProductForm f,
+      BindingResult b,
+      Model m,
+      RedirectAttributes flash) {
+<span class="nc bnc" id="L65" title="All 2 branches missed.">    if (!b.hasErrors())</span>
+      try {
+<span class="nc" id="L67">        service.saveProduct(</span>
+            id,
+<span class="nc" id="L69">            f.getSku(),</span>
+<span class="nc" id="L70">            f.getNome(),</span>
+<span class="nc" id="L71">            f.getCategoriaId(),</span>
+<span class="nc" id="L72">            f.getCusto(),</span>
+<span class="nc" id="L73">            f.getPreco(),</span>
+<span class="nc" id="L74">            f.getMinimo(),</span>
+<span class="nc" id="L75">            f.getAtivo());</span>
+<span class="nc" id="L76">        flash.addFlashAttribute(</span>
+            &quot;success&quot;, &quot;Produto salvo. O saldo é alterado somente por movimentações.&quot;);
+<span class="nc" id="L78">        return &quot;redirect:/produtos&quot;;</span>
+<span class="nc" id="L79">      } catch (BusinessException e) {</span>
+<span class="nc" id="L80">        b.rejectValue(e.field(), &quot;business&quot;, e.getMessage());</span>
+      }
+<span class="nc" id="L82">    return productPage(id, m);</span>
+  }
+
+  @GetMapping(&quot;/categorias&quot;)
+  public String categories(Model m) {
+<span class="fc" id="L87">    m.addAttribute(&quot;form&quot;, new CategoryForm());</span>
+<span class="fc" id="L88">    m.addAttribute(&quot;categories&quot;, repo.categories());</span>
+<span class="fc" id="L89">    return &quot;categories&quot;;</span>
+  }
+
+  @GetMapping(&quot;/categorias/{id}&quot;)
+  public String category(@PathVariable long id, Model m) {
+<span class="fc" id="L94">    var c =</span>
+<span class="fc" id="L95">        repo.categories().stream()</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">            .filter(x -&gt; x.id() == id)</span>
+<span class="fc" id="L97">            .findFirst()</span>
+<span class="pc" id="L98">            .orElseThrow(() -&gt; new BusinessException(&quot;nome&quot;, &quot;Categoria não encontrada.&quot;));</span>
+<span class="fc" id="L99">    var f = new CategoryForm();</span>
+<span class="fc" id="L100">    f.setNome(c.nome());</span>
+<span class="fc" id="L101">    m.addAttribute(&quot;form&quot;, f);</span>
+<span class="fc" id="L102">    m.addAttribute(&quot;id&quot;, id);</span>
+<span class="fc" id="L103">    m.addAttribute(&quot;categories&quot;, repo.categories());</span>
+<span class="fc" id="L104">    return &quot;categories&quot;;</span>
+  }
+
+  @PostMapping({&quot;/categorias&quot;, &quot;/categorias/{id}&quot;})
+  public String saveCategory(
+      @PathVariable(required = false) Long id,
+      @Valid @ModelAttribute(&quot;form&quot;) CategoryForm f,
+      BindingResult b,
+      Model m,
+      RedirectAttributes flash) {
+<span class="nc bnc" id="L114" title="All 2 branches missed.">    if (!b.hasErrors())</span>
+      try {
+<span class="nc" id="L116">        service.category(id, f.getNome());</span>
+<span class="nc" id="L117">        flash.addFlashAttribute(&quot;success&quot;, &quot;Categoria salva.&quot;);</span>
+<span class="nc" id="L118">        return &quot;redirect:/admin/categorias&quot;;</span>
+<span class="nc" id="L119">      } catch (BusinessException e) {</span>
+<span class="nc" id="L120">        b.rejectValue(e.field(), &quot;business&quot;, e.getMessage());</span>
+      }
+<span class="nc" id="L122">    m.addAttribute(&quot;id&quot;, id);</span>
+<span class="nc" id="L123">    m.addAttribute(&quot;categories&quot;, repo.categories());</span>
+<span class="nc" id="L124">    return &quot;categories&quot;;</span>
+  }
+
+  @GetMapping(&quot;/usuarios&quot;)
+  public String users(Model m) {
+<span class="fc" id="L129">    m.addAttribute(&quot;accounts&quot;, accounts.all());</span>
+<span class="fc" id="L130">    return &quot;users&quot;;</span>
+  }
+
+  @GetMapping(&quot;/usuarios/novo&quot;)
+  public String newUser(Model m) {
+<span class="fc" id="L135">    m.addAttribute(&quot;form&quot;, new UserForm());</span>
+<span class="fc" id="L136">    return &quot;user-form&quot;;</span>
+  }
+
+  @GetMapping(&quot;/usuarios/{id}&quot;)
+  public String user(@PathVariable long id, Model m) {
+<span class="fc" id="L141">    var a =</span>
+<span class="pc" id="L142">        accounts.byId(id).orElseThrow(() -&gt; new BusinessException(&quot;nome&quot;, &quot;Conta não encontrada.&quot;));</span>
+<span class="fc" id="L143">    var f = new UserForm();</span>
+<span class="fc" id="L144">    f.setNome(a.nome());</span>
+<span class="fc" id="L145">    f.setLogin(a.login());</span>
+<span class="fc" id="L146">    f.setPerfil(a.perfil());</span>
+<span class="fc" id="L147">    f.setAtivo(a.ativo());</span>
+<span class="fc" id="L148">    m.addAttribute(&quot;form&quot;, f);</span>
+<span class="fc" id="L149">    m.addAttribute(&quot;id&quot;, id);</span>
+<span class="fc" id="L150">    return &quot;user-form&quot;;</span>
+  }
+
+  @PostMapping({&quot;/usuarios/novo&quot;, &quot;/usuarios/{id}&quot;})
+  public String saveUser(
+      @PathVariable(required = false) Long id,
+      @Valid @ModelAttribute(&quot;form&quot;) UserForm f,
+      BindingResult b,
+      Model m,
+      RedirectAttributes flash) {
+<span class="nc bnc" id="L160" title="All 2 branches missed.">    if (!b.hasErrors())</span>
+      try {
+<span class="nc" id="L162">        users.save(id, f.getNome(), f.getLogin(), f.getSenha(), f.getPerfil(), f.getAtivo());</span>
+<span class="nc" id="L163">        flash.addFlashAttribute(</span>
+            &quot;success&quot;, &quot;Conta salva. Alterações de acesso encerram as sessões anteriores.&quot;);
+<span class="nc" id="L165">        return &quot;redirect:/admin/usuarios&quot;;</span>
+<span class="nc" id="L166">      } catch (BusinessException e) {</span>
+<span class="nc" id="L167">        b.rejectValue(e.field(), &quot;business&quot;, e.getMessage());</span>
+      }
+<span class="nc" id="L169">    f.setSenha(&quot;&quot;);</span>
+<span class="nc" id="L170">    m.addAttribute(&quot;id&quot;, id);</span>
+<span class="nc" id="L171">    return &quot;user-form&quot;;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

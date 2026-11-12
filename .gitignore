@@ -1,0 +1,11 @@
+target/
+.env
+.env.*
+!.env.example
+backups/
+*.dump
+*.log
+__pycache__/
+.idea/
+.vscode/
+distribuicao/

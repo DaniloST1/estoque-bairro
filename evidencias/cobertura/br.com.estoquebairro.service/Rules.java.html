@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Rules.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Estoque Bairro</a> &gt; <a href="index.source.html" class="el_package">br.com.estoquebairro.service</a> &gt; <span class="el_source">Rules.java</span></div><h1>Rules.java</h1><pre class="source lang-java linenums">package br.com.estoquebairro.service;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Locale;
+
+public final class Rules {
+  private Rules() {}
+
+  public static String text(String v, String field, int max) {
+<span class="fc bfc" id="L11" title="All 6 branches covered.">    if (v == null || v.isBlank() || v.strip().length() &gt; max)</span>
+<span class="fc" id="L12">      throw new BusinessException(field, &quot;Informe um valor de 1 a &quot; + max + &quot; caracteres.&quot;);</span>
+<span class="fc" id="L13">    return v.strip();</span>
+  }
+
+  public static String normalized(String v, String field, int max) {
+<span class="fc" id="L17">    return text(v, field, max).toUpperCase(Locale.ROOT);</span>
+  }
+
+  public static BigDecimal money(BigDecimal v, String field) {
+<span class="fc bfc" id="L21" title="All 6 branches covered.">    if (v == null || v.signum() &lt;= 0 || v.compareTo(new BigDecimal(&quot;9999999999.99&quot;)) &gt; 0)</span>
+<span class="fc" id="L22">      throw new BusinessException(field, &quot;Informe um valor positivo de até R$ 9.999.999.999,99.&quot;);</span>
+    try {
+<span class="fc" id="L24">      return v.setScale(2, RoundingMode.UNNECESSARY);</span>
+<span class="fc" id="L25">    } catch (ArithmeticException e) {</span>
+<span class="fc" id="L26">      throw new BusinessException(field, &quot;Use no máximo duas casas decimais.&quot;);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

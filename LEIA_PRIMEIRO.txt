@@ -1,0 +1,20 @@
+ESTOQUE BAIRRO - PROJETO JAVA PARA APS
+
+1. Extraia todo o ZIP.
+2. Abra README.md para instalar e iniciar o sistema.
+3. O modo Docker inclui aplicação e PostgreSQL.
+4. O JAR pronto está em distribuicao/ e exige Java 21 e PostgreSQL configurados.
+5. As senhas são geradas no seu computador pelos scripts de configuração.
+
+Documentos principais:
+- docs/RELATORIO_APS.docx e .pdf: relatório editável e versão para leitura.
+- docs/APRESENTACAO_APS.pptx: slides editáveis.
+- docs/RESULTADOS.md: resultados reais e limitações.
+- docs/MATRIZ_REQUISITOS.md: requisitos e evidências.
+
+38 testes automatizados passaram. A avaliação técnica de desempenho e a
+restauração de backup foram executadas. T22 (três participantes reais), os
+dados do grupo, as fichas individuais e a apresentação continuam a cargo
+dos alunos. O Docker foi fornecido, mas não executado no ambiente de teste.
+
+Código completo em src/. Configuração e dependências em pom.xml.

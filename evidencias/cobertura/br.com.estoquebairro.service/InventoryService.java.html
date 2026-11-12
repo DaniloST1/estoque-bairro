@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InventoryService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Estoque Bairro</a> &gt; <a href="index.source.html" class="el_package">br.com.estoquebairro.service</a> &gt; <span class="el_source">InventoryService.java</span></div><h1>InventoryService.java</h1><pre class="source lang-java linenums">package br.com.estoquebairro.service;
+
+import br.com.estoquebairro.model.*;
+import br.com.estoquebairro.repository.*;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.security.*;
+import java.util.*;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class InventoryService {
+  private final InventoryRepository repo;
+  private final UserRepository users;
+
+<span class="fc" id="L18">  public InventoryService(InventoryRepository repo, UserRepository users) {</span>
+<span class="fc" id="L19">    this.repo = repo;</span>
+<span class="fc" id="L20">    this.users = users;</span>
+<span class="fc" id="L21">  }</span>
+
+  public Product product(long id) {
+<span class="fc" id="L24">    return repo.product(id, false)</span>
+<span class="fc" id="L25">        .orElseThrow(() -&gt; new BusinessException(&quot;produtoId&quot;, &quot;Produto não encontrado.&quot;));</span>
+  }
+
+  @Transactional
+  public long category(Long id, String name) {
+<span class="fc" id="L30">    String n = Rules.text(name, &quot;nome&quot;, 80);</span>
+    try {
+<span class="fc bfc" id="L32" title="All 2 branches covered.">      if (id == null) return repo.addCategory(n, Rules.normalized(n, &quot;nome&quot;, 80));</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">      if (repo.editCategory(id, n, Rules.normalized(n, &quot;nome&quot;, 80)) == 0)</span>
+<span class="fc" id="L34">        throw new BusinessException(&quot;nome&quot;, &quot;Categoria não encontrada.&quot;);</span>
+<span class="fc" id="L35">      return id;</span>
+<span class="fc" id="L36">    } catch (DuplicateKeyException e) {</span>
+<span class="fc" id="L37">      throw new BusinessException(&quot;nome&quot;, &quot;Já existe uma categoria com esse nome.&quot;);</span>
+    }
+  }
+
+  @Transactional
+  public long saveProduct(
+      Long id,
+      String sku,
+      String name,
+      long cat,
+      BigDecimal cost,
+      BigDecimal price,
+      int min,
+      boolean active) {
+<span class="fc" id="L51">    String s = Rules.normalized(sku, &quot;sku&quot;, 40), n = Rules.text(name, &quot;nome&quot;, 120);</span>
+<span class="fc" id="L52">    BigDecimal pr = Rules.money(price, &quot;preco&quot;);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">    if (min &lt; 0) throw new BusinessException(&quot;minimo&quot;, &quot;O mínimo não pode ser negativo.&quot;);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">    if (!repo.categoryExists(cat))</span>
+<span class="fc" id="L55">      throw new BusinessException(&quot;categoriaId&quot;, &quot;Selecione uma categoria existente.&quot;);</span>
+    try {
+<span class="fc bfc" id="L57" title="All 2 branches covered.">      if (id == null) return repo.addProduct(s, n, cat, Rules.money(cost, &quot;custo&quot;), pr, min);</span>
+<span class="fc" id="L58">      Product old =</span>
+<span class="fc" id="L59">          repo.product(id, true)</span>
+<span class="fc" id="L60">              .orElseThrow(() -&gt; new BusinessException(&quot;nome&quot;, &quot;Produto não encontrado.&quot;));</span>
+<span class="fc bfc" id="L61" title="All 4 branches covered.">      if (!active &amp;&amp; old.saldo() != 0)</span>
+<span class="fc" id="L62">        throw new BusinessException(&quot;ativo&quot;, &quot;Zere o saldo por movimentações antes de inativar.&quot;);</span>
+<span class="fc" id="L63">      repo.editProduct(id, s, n, cat, pr, min, active);</span>
+<span class="fc" id="L64">      return id;</span>
+<span class="fc" id="L65">    } catch (DuplicateKeyException e) {</span>
+<span class="fc" id="L66">      throw new BusinessException(&quot;sku&quot;, &quot;Este SKU já está cadastrado.&quot;);</span>
+    }
+  }
+
+  public MovementCommand validate(MovementCommand c) {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">    if (c.chave() == null)</span>
+<span class="fc" id="L72">      throw new BusinessException(&quot;chave&quot;, &quot;Solicitação inválida. Abra um novo formulário.&quot;);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">    if (c.quantidade() &lt;= 0)</span>
+<span class="fc" id="L74">      throw new BusinessException(&quot;quantidade&quot;, &quot;Use uma quantidade inteira maior que zero.&quot;);</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">    if (!Set.of(&quot;COMPRA&quot;, &quot;VENDA&quot;, &quot;PERDA&quot;).contains(Objects.toString(c.motivo(), &quot;&quot;)))</span>
+<span class="fc" id="L76">      throw new BusinessException(&quot;motivo&quot;, &quot;Selecione compra, venda ou perda.&quot;);</span>
+<span class="fc" id="L77">    String reason = Objects.toString(c.justificativa(), &quot;&quot;).strip();</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">    if (reason.length() &gt; 300)</span>
+<span class="fc" id="L79">      throw new BusinessException(&quot;justificativa&quot;, &quot;Use até 300 caracteres.&quot;);</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">    if (c.motivo().equals(&quot;PERDA&quot;)) reason = Rules.text(reason, &quot;justificativa&quot;, 300);</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">    BigDecimal cost = c.motivo().equals(&quot;COMPRA&quot;) ? Rules.money(c.custo(), &quot;custo&quot;) : null;</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">    BigDecimal price = c.motivo().equals(&quot;VENDA&quot;) ? Rules.money(c.preco(), &quot;preco&quot;) : null;</span>
+<span class="fc" id="L83">    return new MovementCommand(</span>
+<span class="fc" id="L84">        c.chave(), c.produtoId(), c.quantidade(), c.motivo(), cost, price, reason);</span>
+  }
+
+  @Transactional
+  public Movement move(MovementCommand input, long user) {
+<span class="fc" id="L89">    MovementCommand c = validate(input);</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">    if (users.byId(user).filter(Account::ativo).isEmpty())</span>
+<span class="fc" id="L91">      throw new BusinessException(&quot;chave&quot;, &quot;Usuário inativo ou inexistente.&quot;);</span>
+<span class="fc" id="L92">    String hash = fingerprint(c, user);</span>
+    // Lock by request BEFORE product: even a replay with another product is serialized.
+<span class="fc" id="L94">    repo.lockRequest(c.chave());</span>
+<span class="fc" id="L95">    Optional&lt;Movement&gt; prior = repo.byKey(c.chave());</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">    if (prior.isPresent()) {</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">      if (!prior.get().assinatura().equals(hash))</span>
+<span class="fc" id="L98">        throw new BusinessException(&quot;chave&quot;, &quot;Esta solicitação já foi usada com outros dados.&quot;);</span>
+<span class="fc" id="L99">      return prior.get();</span>
+    }
+<span class="fc" id="L101">    Product p =</span>
+<span class="fc" id="L102">        repo.product(c.produtoId(), true)</span>
+<span class="fc" id="L103">            .orElseThrow(() -&gt; new BusinessException(&quot;produtoId&quot;, &quot;Produto não encontrado.&quot;));</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">    if (!p.ativo())</span>
+<span class="fc" id="L105">      throw new BusinessException(&quot;produtoId&quot;, &quot;Produto inativo não pode ser movimentado.&quot;);</span>
+<span class="fc" id="L106">    boolean entry = c.motivo().equals(&quot;COMPRA&quot;);</span>
+<span class="fc bfc" id="L107" title="All 4 branches covered.">    if (!entry &amp;&amp; c.quantidade() &gt; p.saldo())</span>
+<span class="fc" id="L108">      throw new BusinessException(</span>
+<span class="fc" id="L109">          &quot;quantidade&quot;, &quot;Saldo insuficiente. Disponível: &quot; + p.saldo() + &quot; UN.&quot;);</span>
+<span class="fc bfc" id="L110" title="All 4 branches covered.">    if (c.motivo().equals(&quot;VENDA&quot;) &amp;&amp; p.preco().compareTo(c.preco()) != 0)</span>
+<span class="fc" id="L111">      throw new BusinessException(&quot;preco&quot;, &quot;O preço mudou. Abra uma nova saída e confira o valor.&quot;);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">    long next = (long) p.saldo() + (entry ? c.quantidade() : -c.quantidade());</span>
+<span class="fc bfc" id="L113" title="All 2 branches covered.">    if (next &gt; Integer.MAX_VALUE)</span>
+<span class="fc" id="L114">      throw new BusinessException(&quot;quantidade&quot;, &quot;A quantidade ultrapassa o limite do estoque.&quot;);</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">    BigDecimal cost = entry ? c.custo() : p.custo();</span>
+<span class="fc" id="L116">    repo.stock(p.id(), (int) next, cost);</span>
+<span class="fc" id="L117">    long id = repo.insertMovement(c, user, cost, c.preco(), hash, (int) next);</span>
+<span class="fc" id="L118">    return repo.movement(id).orElseThrow();</span>
+  }
+
+  private String fingerprint(MovementCommand c, long user) {
+<span class="fc" id="L122">    String value =</span>
+        user
+            + &quot;|&quot;
+<span class="fc" id="L125">            + c.produtoId()</span>
+            + &quot;|&quot;
+<span class="fc" id="L127">            + c.quantidade()</span>
+            + &quot;|&quot;
+<span class="fc" id="L129">            + c.motivo()</span>
+            + &quot;|&quot;
+<span class="fc" id="L131">            + c.custo()</span>
+            + &quot;|&quot;
+<span class="fc" id="L133">            + c.preco()</span>
+            + &quot;|&quot;
+<span class="fc" id="L135">            + c.justificativa();</span>
+    try {
+<span class="fc" id="L137">      return HexFormat.of()</span>
+<span class="fc" id="L138">          .formatHex(</span>
+<span class="fc" id="L139">              MessageDigest.getInstance(&quot;SHA-256&quot;).digest(value.getBytes(StandardCharsets.UTF_8)));</span>
+<span class="nc" id="L140">    } catch (NoSuchAlgorithmException e) {</span>
+<span class="nc" id="L141">      throw new IllegalStateException(e);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
